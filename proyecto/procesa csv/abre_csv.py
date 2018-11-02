@@ -1,15 +1,8 @@
 import numpy as np 
 import pandas as pd 
-##
-names = ['movieId','title', 'genres']
-peliculasDF = pd.read_csv('movies.csv',
-                  skiprows = 1,
-                  index_col=False, 
-                  names = names)
-"""
-peliculasDF = pd.read_csv('movies.csv')
-"""
-peliculasDF = peliculasDF.drop(columns="movieId")
+
+
+
 #print(peliculasDF)
 
 vectoresLista = []
@@ -66,7 +59,7 @@ print('$$$$$$$$$$      NEW      #########')
       
 
 
-for i in range(1, 2):
+for i in range(1, numUsuarios):
     temp =ratingsDF[ ratingsDF.userId == i ]
     for j in range (1, numMovies):
         
@@ -81,3 +74,51 @@ for i in range(1, 2):
 zerosDF = zerosDF.fillna(0)
 print (zerosDF)
 print ('hola')
+zerosDF.to_csv(r'zerosDf.csv')
+
+peliculasND = np.arange(numMovies)
+vectorsDF = pd.DataFrame(columns = peliculasND)
+print(vectorsDF)
+
+for i in range(1, numUsuarios):
+    vectUsuario = zerosDF.loc[zerosDF.userId == i]
+    if (i <3):
+        print("fd")
+        #print(vectUsuario)
+    vectUsuario = vectUsuario.drop(columns = ['userId', 'movieId'])
+    #print(vectUsuario)
+    vectUsuario = vectUsuario.stack()
+    vectUsuario = vectUsuario.values
+    seriesUsuario = pd.Series(vectUsuario)
+    #print(vectUsuario)
+    vectorsDF = vectorsDF.append(seriesUsuario, ignore_index=True)
+    
+
+
+print(vectorsDF)
+
+miVector = zerosDF.loc[zerosDF.userId == 1]
+miVector = miVector.drop(columns = ['userId', 'movieId'])
+    #print(vectUsuario)
+miVector = miVector.stack()
+miVector = miVector.values
+
+
+distancias = pd.DataFrame(columns =['i', 'd'])
+
+for i in range (1, numUsuarios-1):
+    vectUs = vectorsDF.values[i]
+    dist = np.linalg.norm(miVector- vectUs)
+    nueva = pd.Series([i, dist])
+    distancias = distancias.append(nueva, ignore_index = True)
+
+
+distancias = distancias.drop(columns= ['i', 'd'])
+distancias = distancias.rename(index=str, columns={0: "id", 1: "dist"})
+
+
+
+distancias = distancias.sort_values(by=['dist'])
+
+
+print(distancias)
