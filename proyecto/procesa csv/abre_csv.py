@@ -26,11 +26,9 @@ ratingsDF = ratingsDF.drop(index=range(1259,100836))
 
 print(ratingsDF)
 
-#print(ratingsDF.loc[0])
 
-#print(ratingsDF[ratingsDF.userId==1])
 
-numMovies = 193609
+numMovies = 1936
 numUsuarios = 10
 numRatings = numMovies*numUsuarios
 
@@ -42,33 +40,44 @@ movies2ND = np.arange(numMovies)
 movies2ND = movies2ND +1
 for n in range(2, numUsuarios+1):
     movies2ND = np.append(movies2ND, moviesND)
-#print(movies2ND)
-#print(len(movies2ND))
 
-usuariosND = np.zeros(numMovies, np.int8)
+
+
+
+usuariosND = np.zeros(numMovies, np.int64)
 usuariosND.fill(1)
 for n in range (2,numUsuarios+1):
-    usuarioND = np.zeros(numMovies, np.int8)
+    usuarioND = np.zeros(numMovies, np.int64)
     usuarioND.fill(n)
     usuariosND = np.append(usuariosND, usuarioND)
-#print(usuariosND)
-#print(len(usuariosND))
 
 
-cerosDict = {'userId': usuariosND, 'movieId':movies2ND}
 
-cerosDF=pd.DataFrame(cerosDict)
-cerosDF['rating'] = np.nan
-#cerosDF = cerosDF.fillna(0)
-print(cerosDF)
+
+zerosDict = {'userId': usuariosND, 'movieId':movies2ND}
+
+zerosDF=pd.DataFrame(zerosDict)
+zerosDF['rating'] = np.nan
+#zerosDF = zerosDF.fillna(0)
+print(zerosDF)
 
 print('$$$$$$$$$$      NEW      #########')
       
       
-nueva = cerosDF.combine_first(ratingsDF)
 
 
-#nueva = ratingsDF.merge(ratingsDF, how = 'left')
-#nueva = cerosDF.fillna(ratingsDF)
-
-print(nueva)
+for i in range(1, 2):
+    temp =ratingsDF[ ratingsDF.userId == i ]
+    for j in range (1, numMovies):
+        
+        temp2 = temp[temp.movieId==j]
+        if not temp2.empty:
+            #print (i)
+            #print(j)
+            #print ([ (i-1)*numMovies + j])
+            #print(zerosDF.values[(i-1)*numMovies + j, 2])
+            zerosDF.at[(i-1)*numMovies + j, 'rating']= temp2.rating
+            #print(zerosDF.values[(i-1)*numMovies + j, 2])
+zerosDF = zerosDF.fillna(0)
+print (zerosDF)
+print ('hola')
