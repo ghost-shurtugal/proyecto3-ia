@@ -122,3 +122,27 @@ distancias = distancias.sort_values(by=['dist'])
 
 
 print(distancias)
+
+
+suma = np.zeros(numMovies, np.int64)
+
+for i in range (0,4):
+    index = distancias.values[i,0]
+    index_int = int(index)
+    print(index)
+    suma= np.add(suma, vectorsDF.values[index_int])
+    print (vectorsDF.values[index_int])
+print (suma)
+recomendaciones = suma *(1/4)
+print(recomendaciones)
+
+
+recDF = pd.DataFrame(columns =['peli', 'rec'])
+for i in range (1, numMovies-1):
+    nueva = pd.Series([i, recomendaciones[i]])
+    recDF = recDF.append(nueva, ignore_index = True)
+    
+
+print(recDF)
+recDf = recDF.sort_values(by=[1])
+print(recDF)
