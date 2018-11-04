@@ -43,7 +43,7 @@ def combinaDf(numMovies, numUsuarios, ratingsDF, zerosDf):
                 #print(j)
                 #print ([ (i-1)*numMovies + j])
                 #print(zerosDF.values[(i-1)*numMovies + j, 2])
-                zerosDf.at[(i-1)*numMovies + j, 'rating']= temp2.rating
+                zerosDf.at[(i-1)*numMovies + (j-1), 'rating']= temp2.rating
                 #print(zerosDF.values[(i-1)*numMovies + j, 2])
     zerosDf = zerosDf.fillna(0)
 
@@ -55,13 +55,16 @@ def vectoriza(numMovies, numUsuarios, zerosDf):
     
     #crea un Df vacio con los indices de las peliculas como columnas
     peliculasND = np.arange(numMovies)
+    #peliculasND = peliculasND + 1
     vectorsDF = pd.DataFrame(columns = peliculasND)   
     
-    for i in range(1, numUsuarios):
+    for i in range(1, numUsuarios+1):
         vectUsuario = zerosDf.loc[zerosDf.userId == i]
-        if (i <3):
+        
+        """if (i <3):
             print("fd")
             #print(vectUsuario)
+            """
         vectUsuario = vectUsuario.drop(columns = ['userId', 'movieId'])
         #print(vectUsuario)
         vectUsuario = vectUsuario.stack()
@@ -76,10 +79,10 @@ def obten_distancias(numUsuarios, vectorsDf, miVector):
     
     distancias = pd.DataFrame(columns =['i', 'd'])
 
-    for i in range (1, numUsuarios-1):
+    for i in range (0, numUsuarios):
         vectUs = vectorsDf.values[i]
         dist = np.linalg.norm(miVector- vectUs)
-        nueva = pd.Series([i, dist])
+        nueva = pd.Series([i+1, dist])
         distancias = distancias.append(nueva, ignore_index = True)
     
     
@@ -90,37 +93,50 @@ def obten_distancias(numUsuarios, vectorsDf, miVector):
     return distancias
 
     
-def obten_rec(vectorsDf, distancias):
+def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
     
     suma = np.zeros(numMovies, np.int64)
-    
-    for i in range (0,4):
+    print(suma)
+    for i in range (0,numVectores):
         index = distancias.values[i,0]
         index_int = int(index)
-        print(index)
-        suma= np.add(suma, vectorsDf.values[index_int])
-        print (vectorsDf.values[index_int])
-    print (suma)
-    recomendaciones = suma *(1/4)
-    print(recomendaciones)
+        #print(index)
+        sumando = vectorsDf.values[index_int-1]
+        #print("sumando")
+        #print(sumando)
+        suma= np.add(suma, sumando)
+        #print("suma")
+        #print(suma)
+        #print (vectorsDf.values[index_int])
+    #print (suma)
+    recomendaciones = suma *(1/numVectores)
+    #print(recomendaciones)
     
     
-    recDF = pd.DataFrame(columns =['peli', 'rec'])
+    recDF = pd.DataFrame(columns =['p', 'r'])
     for i in range (1, numMovies-1):
         nueva = pd.Series([i, recomendaciones[i]])
         recDF = recDF.append(nueva, ignore_index = True)
         
     
+    recDF = recDF.drop(columns= ['p', 'r'])
+    recDF = recDF.rename(index=str, columns={0: "pelicula", 1: "recomendacion"})
+
     print(recDF)
-    recDf = recDF.sort_values(by=[1])
+    
+    
+    
+    recDf = recDF.sort_values(by=['recomendacion'])
+    
+
     return recDf
 
 
 
 ratingsDf = pd.read_csv('ratings_reducido.csv')
 
-print("ratings")
-print(ratingsDf)
+#print("ratings")
+#print(ratingsDf)
 
 
 
@@ -139,41 +155,43 @@ numUsuarios = int(numUsuarios)
 #print(numUsuarios)
 
 
-print("zeros")
+#print("zeros")
 zerosDf = crea_cerosDf(numMovies, numUsuarios)
 
-zerosDf.to_csv(r'zerosDf.csv')
+#zerosDf.to_csv(r'zerosDf.csv')
 #print(zerosDf)
 
 
 
 
 zerosDf = combinaDf(numMovies, numUsuarios, ratingsDf, zerosDf)
-print ("combinados")
-#print(zerosDf)
+#print ("combinados")
+zerosDf.to_csv(r'zerosDf.csv', index=False)
+print(zerosDf)
       
 
 vectorsDf = vectoriza(numMovies, numUsuarios, zerosDf)
 print ("vectors")
-#print(vectorsDf)
+print(vectorsDf)
 
 
 
 miVector = zerosDf.loc[zerosDf.userId == 1]
 miVector = miVector.drop(columns = ['userId', 'movieId'])
-    #print(vectUsuario)
+
 miVector = miVector.stack()
 miVector = miVector.values
-
+#print("mi vector")
+#print(miVector)
 
 
 distanciasDf = obten_distancias(numUsuarios, vectorsDf, miVector)
 print("distancias")
-#print(distancias)
+print(distanciasDf)
 
 
-recDf = obten_rec(vectorsDf, distanciasDf)
+recDf = obten_rec(numMovies, vectorsDf, distanciasDf,4, miVector)
 print("recomendaciones")
-#print(recDF)
+print(recDf)
 
 

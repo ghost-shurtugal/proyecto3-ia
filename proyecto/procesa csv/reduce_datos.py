@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd 
 
 
-numPeliculas= 100
-numUsuarios=10
+numPeliculas= 14
+numUsuarios=20
 
 
 
