@@ -133,6 +133,14 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
 
 
 
+
+#$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
+"""este es el numero de vectores que se obtendran para el promedio
+ se suman los x vectores mas similares al usuario y se promedian
+para obtener las recomendaciones"""
+CONST_NUM_VECTORES = 4
+
+
 ratingsDf = pd.read_csv('ratings_reducido.csv')
 
 #print("ratings")
@@ -167,18 +175,21 @@ zerosDf = crea_cerosDf(numMovies, numUsuarios)
 zerosDf = combinaDf(numMovies, numUsuarios, ratingsDf, zerosDf)
 #print ("combinados")
 zerosDf.to_csv(r'zerosDf.csv', index=False)
-print(zerosDf)
+#print(zerosDf)
       
 
 vectorsDf = vectoriza(numMovies, numUsuarios, zerosDf)
-print ("vectors")
-print(vectorsDf)
+#print ("vectors")
+#print(vectorsDf)
 
 
 
+#$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
+"""ESTE ES EL VECTOR CON LAS PREFERENCIAS DEL USUARIO. LAS 
+ RECOMENDACIONES SE BASAN EN ESTE VECTOR, SE TOMA EL PRIMER VECTOR
+SOLO PARA PRUEBA ESTO SE DEBE CAMBIAR"""
 miVector = zerosDf.loc[zerosDf.userId == 1]
 miVector = miVector.drop(columns = ['userId', 'movieId'])
-
 miVector = miVector.stack()
 miVector = miVector.values
 #print("mi vector")
@@ -186,11 +197,11 @@ miVector = miVector.values
 
 
 distanciasDf = obten_distancias(numUsuarios, vectorsDf, miVector)
-print("distancias")
-print(distanciasDf)
+#print("distancias")
+#print(distanciasDf)
 
 
-recDf = obten_rec(numMovies, vectorsDf, distanciasDf,4, miVector)
+recDf = obten_rec(numMovies, vectorsDf, distanciasDf,CONST_NUM_VECTORES, miVector)
 print("recomendaciones")
 print(recDf)
 
