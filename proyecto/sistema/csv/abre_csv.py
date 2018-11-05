@@ -126,11 +126,15 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
 
     return recDf
 
+# Función que obtiene el número de usuarios en el sistema
+
 
 def getNumUsers():
     ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
     numUsuariosDf = ratingsDf[ratingsDf['userId'] == ratingsDf['userId'].max()]
     return numUsuariosDf.values[0, 0]
+
+# Función que obtiene el número de películas registradas en el sistema.
 
 
 def getNumMovies():
@@ -139,6 +143,8 @@ def getNumMovies():
                               == ratingsDf['movieId'].max()]
     return numUsuariosDf.values[0, 0]
 
+# Función que busca una película por Id
+
 
 def searchMovieById(movieId):
     moviesDf = pd.read_csv('sistema/csv/movies_reducido.csv')
@@ -146,9 +152,14 @@ def searchMovieById(movieId):
     numMoviesDf = moviesDf[moviesDf['movieId'] == movieId]
     return numMoviesDf.title.item()
 
+# Función que busca todas las películas del sistema
+
 
 def searchMovies():
     return pd.read_csv('sistema/csv/movies_reducido.csv')
+
+# Función que guarda a partir del un id de usuario y una matriz de relación
+# [película, ranking] las relaciones usuario-película-ranking
 
 
 def saveInRankigs(idUsuario, datos):
@@ -159,6 +170,9 @@ def saveInRankigs(idUsuario, datos):
     result = ratingsDf.append(pd.DataFrame(result, columns=[
         "userId", "movieId", "rating"]))
     result.to_csv(r'sistema/csv/ratings_reducido.csv', index=False)
+
+# Función que calcula las recomendaciones a partir de un identificador
+# de usuario y el número de vectores a ocupar
 
 
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
@@ -197,8 +211,7 @@ def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
 
     #$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
     """ESTE ES EL VECTOR CON LAS PREFERENCIAS DEL USUARIO. LAS 
-     RECOMENDACIONES SE BASAN EN ESTE VECTOR, SE TOMA EL PRIMER VECTOR
-    SOLO PARA PRUEBA ESTO SE DEBE CAMBIAR"""
+     RECOMENDACIONES SE BASAN EN ESTE VECTOR"""
     miVector = zerosDf.loc[zerosDf.userId == userId]
     miVector = miVector.drop(columns=['userId', 'movieId'])
     miVector = miVector.stack()

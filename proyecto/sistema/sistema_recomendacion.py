@@ -1,9 +1,11 @@
 from sistema.utils import getIntegerFromInterval
 from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById, searchMovies, saveInRankigs, getNumMovies
 
+# clase que implementa la lógica de interacción con el usuario para darle recomendaciones
+
 
 class SistemaRecomendacion():
-
+    # Segmento de los mensajes principales
     MSG_BIENVENIDA = "¡Bienvenido al sistema de recomendaciones!"
 
     MSG_MENU = """
@@ -12,8 +14,9 @@ Digite una opción:
 1) Iniciar sesión
 2) Dar de alta nuevo usuario
 3) Salir
-                """
+"""
 
+# Método que implemental el menú del sistema
     @staticmethod
     def menu():
         print(SistemaRecomendacion.MSG_BIENVENIDA)
@@ -42,6 +45,7 @@ Digite una opción:
             elif opcion == 2:
                 SistemaRecomendacion.agregarUsuario()
 
+# Método que implementa la logística de agregar usuarios
     @staticmethod
     def agregarUsuario():
         nUsuarios = getNumUsers()
@@ -63,6 +67,7 @@ Digite una opción:
         print("Se han guardado su registro, el número de usuario que tiene es el número %d" % (
             nUsuarios + 1))
 
+#Método que apoya en el formateo del arreglo de entrada de la relación de usuarios, película y ranking
     @staticmethod
     def formateaArregloDePeliculasYRankings(cadenaDeEntrada):
         arregloDeEntrada = cadenaDeEntrada.split(",")
