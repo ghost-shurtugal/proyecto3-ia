@@ -126,125 +126,57 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
 
     return recDf
 
-    def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
-        ratingsDf = pd.read_csv('ratings_reducido.csv')
 
-        numMoviesDf = ratingsDf[ratingsDf['movieId']
-                                == ratingsDf['movieId'].max()]
-        numUsuariosDf = ratingsDf[ratingsDf['userId']
-                                  == ratingsDf['userId'].max()]
-        numMovies = numMoviesDf.values[0, 1]
-        # print(numMoviesDf)
-        numUsuarios = numUsuariosDf.values[0, 0]
-        # print(numUsuariosDf)
+def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
+    ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
 
-        numMovies = int(numMovies)
-        numUsuarios = int(numUsuarios)
-        # print("numMovies")
-        # print(numMovies)
-        # print("numUsuarios")
-        # print(numUsuarios)
+    numMoviesDf = ratingsDf[ratingsDf['movieId']
+                            == ratingsDf['movieId'].max()]
+    numUsuariosDf = ratingsDf[ratingsDf['userId']
+                              == ratingsDf['userId'].max()]
+    numMovies = numMoviesDf.values[0, 1]
+    # print(numMoviesDf)
+    numUsuarios = numUsuariosDf.values[0, 0]
+    # print(numUsuariosDf)
 
-        # print("zeros")
-        zerosDf = crea_cerosDf(numMovies, numUsuarios)
+    numMovies = int(numMovies)
+    numUsuarios = int(numUsuarios)
+    # print("numMovies")
+    # print(numMovies)
+    # print("numUsuarios")
+    # print(numUsuarios)
 
-        # zerosDf.to_csv(r'zerosDf.csv')
-        # print(zerosDf)
+    # print("zeros")
+    zerosDf = crea_cerosDf(numMovies, numUsuarios)
 
-        zerosDf = combinaDf(numMovies, numUsuarios, ratingsDf, zerosDf)
-        #print ("combinados")
-        zerosDf.to_csv(r'zerosDf.csv', index=False)
-        # print(zerosDf)
+    # zerosDf.to_csv(r'zerosDf.csv')
+    # print(zerosDf)
 
-        vectorsDf = vectoriza(numMovies, numUsuarios, zerosDf)
-        #print ("vectors")
-        # print(vectorsDf)
+    zerosDf = combinaDf(numMovies, numUsuarios, ratingsDf, zerosDf)
+    #print ("combinados")
+    zerosDf.to_csv(r'zerosDf.csv', index=False)
+    # print(zerosDf)
 
-        #$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
-        """ESTE ES EL VECTOR CON LAS PREFERENCIAS DEL USUARIO. LAS 
-         RECOMENDACIONES SE BASAN EN ESTE VECTOR, SE TOMA EL PRIMER VECTOR
-        SOLO PARA PRUEBA ESTO SE DEBE CAMBIAR"""
-        miVector = zerosDf.loc[zerosDf.userId == userId]
-        miVector = miVector.drop(columns=['userId', 'movieId'])
-        miVector = miVector.stack()
-        miVector = miVector.values
-        #print("mi vector")
-        # print(miVector)
+    vectorsDf = vectoriza(numMovies, numUsuarios, zerosDf)
+    #print ("vectors")
+    # print(vectorsDf)
 
-        distanciasDf = obten_distancias(numUsuarios, vectorsDf, miVector)
-        # print("distancias")
-        # print(distanciasDf)
+    #$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
+    """ESTE ES EL VECTOR CON LAS PREFERENCIAS DEL USUARIO. LAS 
+     RECOMENDACIONES SE BASAN EN ESTE VECTOR, SE TOMA EL PRIMER VECTOR
+    SOLO PARA PRUEBA ESTO SE DEBE CAMBIAR"""
+    miVector = zerosDf.loc[zerosDf.userId == userId]
+    miVector = miVector.drop(columns=['userId', 'movieId'])
+    miVector = miVector.stack()
+    miVector = miVector.values
+    #print("mi vector")
+    # print(miVector)
 
-        recDf = obten_rec(numMovies, vectorsDf, distanciasDf,
-                          CONST_NUM_VECTORES, miVector)
-        print("recomendaciones")
-        print(recDf)
+    distanciasDf = obten_distancias(numUsuarios, vectorsDf, miVector)
+    # print("distancias")
+    # print(distanciasDf)
 
-
-#$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
-"""este es el numero de vectores que se obtendran para el promedio
- se suman los x vectores mas similares al usuario y se promedian
-para obtener las recomendaciones"""
-CONST_NUM_VECTORES = 4
-
-
-ratingsDf = pd.read_csv('ratings_reducido.csv')
-
-# print("ratings")
-# print(ratingsDf)
-
-
-numMoviesDf = ratingsDf[ratingsDf['movieId'] == ratingsDf['movieId'].max()]
-numUsuariosDf = ratingsDf[ratingsDf['userId'] == ratingsDf['userId'].max()]
-numMovies = numMoviesDf.values[0, 1]
-# print(numMoviesDf)
-numUsuarios = numUsuariosDf.values[0, 0]
-# print(numUsuariosDf)
-
-numMovies = int(numMovies)
-numUsuarios = int(numUsuarios)
-# print("numMovies")
-# print(numMovies)
-# print("numUsuarios")
-# print(numUsuarios)
-
-
-# print("zeros")
-zerosDf = crea_cerosDf(numMovies, numUsuarios)
-
-# zerosDf.to_csv(r'zerosDf.csv')
-# print(zerosDf)
-
-
-zerosDf = combinaDf(numMovies, numUsuarios, ratingsDf, zerosDf)
-#print ("combinados")
-zerosDf.to_csv(r'zerosDf.csv', index=False)
-# print(zerosDf)
-
-
-vectorsDf = vectoriza(numMovies, numUsuarios, zerosDf)
-#print ("vectors")
-# print(vectorsDf)
-
-
-#$$$$$$$$$$$$$$$--------IMPORTANTE---------$$$$$$$$$$
-"""ESTE ES EL VECTOR CON LAS PREFERENCIAS DEL USUARIO. LAS 
- RECOMENDACIONES SE BASAN EN ESTE VECTOR, SE TOMA EL PRIMER VECTOR
-SOLO PARA PRUEBA ESTO SE DEBE CAMBIAR"""
-miVector = zerosDf.loc[zerosDf.userId == 1]
-miVector = miVector.drop(columns=['userId', 'movieId'])
-miVector = miVector.stack()
-miVector = miVector.values
-#print("mi vector")
-# print(miVector)
-
-
-distanciasDf = obten_distancias(numUsuarios, vectorsDf, miVector)
-# print("distancias")
-# print(distanciasDf)
-
-
-recDf = obten_rec(numMovies, vectorsDf, distanciasDf,
-                  CONST_NUM_VECTORES, miVector)
-print("recomendaciones")
-print(recDf)
+    recDf = obten_rec(numMovies, vectorsDf, distanciasDf,
+                      CONST_NUM_VECTORES, miVector)
+    print("recomendaciones")
+    print(recDf)

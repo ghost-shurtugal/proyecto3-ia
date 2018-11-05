@@ -1,4 +1,5 @@
 from sistema.utils import getIntegerFromInterval
+from sistema.csv.abre_csv import calcularRecomendaciones
 
 
 class SistemaRecomendacion():
@@ -18,7 +19,7 @@ Digite una opción:
         print(SistemaRecomendacion.MSG_BIENVENIDA)
         while True:
             opcion = getIntegerFromInterval(
-                SistemaRecomendacion.MSG_MENU, 1, 2, "La opción es inválida")
+                SistemaRecomendacion.MSG_MENU, 1, 3, "La opción es inválida")
             if opcion == 3:
                 print("Vuelva pronto")
                 break
