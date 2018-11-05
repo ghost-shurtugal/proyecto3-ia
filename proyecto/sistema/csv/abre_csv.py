@@ -154,11 +154,11 @@ def searchMovies():
 def saveInRankigs(idUsuario, datos):
     result = []
     for d in datos:
-        result.append([idUsuario, d[0], d[1]])
+        result.append([int(idUsuario), d[0], d[1]])
     ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
-    ratingsDf.append(pd.DataFrame(result))
-    print(ratingsDf)
-    ratingsDf.to_csv(r'sistema/csv/ratings_reducido.csv', index=False)
+    result = ratingsDf.append(pd.DataFrame(result, columns=[
+        "userId", "movieId", "rating"]))
+    result.to_csv(r'sistema/csv/ratings_reducido.csv', index=False)
 
 
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):

@@ -52,7 +52,7 @@ Digite una opción:
                   (peliculas.loc[i, "movieId"], peliculas.loc[i, "title"], peliculas.loc[i, "genres"]))
         while True:
             peliculasRankeadas = input(
-                "El formato debe ser el siguiente: idPelicula,ranking,idPelicula2,ranking2...\nEl ranking debe ser del 1 al 5 [1-5]\n").strip()
+                "El formato debe ser el siguiente: idPelicula,ranking,idPelicula2,ranking2...\nEl ranking debe ser del 1 al 5 [1-5]\nSe le recuerda que no puede dar diferentes rankigs a la misma película.\n").strip()
             peliculasRankeadas = SistemaRecomendacion.formateaArregloDePeliculasYRankings(
                 peliculasRankeadas)
             if not peliculasRankeadas:
@@ -72,12 +72,16 @@ Digite una opción:
             maxMovie = getNumMovies()
             maxRanking = 5
             result = []
+            peliculasReportadas = set()
             for i in range(0, len(arregloDeEntrada), 2):
                 tmp = [int(arregloDeEntrada[i]),
                        float(arregloDeEntrada[i + 1])]
+                peliculasReportadas.add(tmp[0])
                 if tmp[0] < 1 or tmp[1] < 1 or tmp[0] > maxMovie or tmp[1] > maxRanking:
                     return None
                 result.append(tmp)
+            if len(peliculasReportadas) != 10:
+                return None
             return result
         except Exception:
             return None
