@@ -1,5 +1,5 @@
 from sistema.utils import getIntegerFromInterval
-from sistema.csv.abre_csv import calcularRecomendaciones
+from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers
 
 
 class SistemaRecomendacion():
@@ -24,16 +24,16 @@ Digite una opción:
                 print("Vuelva pronto")
                 break
             elif opcion == 1:
-                SistemaRecomendacion.buscarSugerencia(
+                nUsuarios = getNumUsers()
+                recomendaciones = calcularRecomendaciones(
                     getIntegerFromInterval(
-                        "Digite el número de usuario a buscar", 1, nUsuarios,
+                        ("Digite el número de usuario a buscar, del 1 al %d:\n" %
+                         nUsuarios),
+                        1, nUsuarios,
                         "El usuario que intenta buscar no existe"))
+                print(recomendaciones)
             elif opcion == 2:
                 SistemaRecomendacion.agregarUsuario()
-
-    @staticmethod
-    def buscarSugerencia(idUsuario):
-        return
 
     def __init__(self):
         SistemaRecomendacion.menu()

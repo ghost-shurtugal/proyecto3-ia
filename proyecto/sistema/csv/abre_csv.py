@@ -127,6 +127,12 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
     return recDf
 
 
+def getNumUsers():
+    ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
+    numUsuariosDf = ratingsDf[ratingsDf['userId'] == ratingsDf['userId'].max()]
+    return numUsuariosDf.values[0, 0]
+
+
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
     ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
 
@@ -180,3 +186,4 @@ def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
                       CONST_NUM_VECTORES, miVector)
     print("recomendaciones")
     print(recDf)
+    return recDf
