@@ -9,8 +9,7 @@ class SistemaRecomendacion():
 Digite una opción:
 
 1) Iniciar sesión
-2) Dar de alta nuevo usuario
-3) Salir
+2) Salir
                 """
 
     @staticmethod
@@ -18,8 +17,8 @@ Digite una opción:
         print(SistemaRecomendacion.MSG_BIENVENIDA)
         while True:
             opcion = getIntegerFromInterval(
-                SistemaRecomendacion.MSG_MENU, 1, 3, "La opción es inválida")
-            if opcion == 3:
+                SistemaRecomendacion.MSG_MENU, 1, 2, "La opción es inválida")
+            if opcion == 2:
                 print("Vuelva pronto")
                 break
 
