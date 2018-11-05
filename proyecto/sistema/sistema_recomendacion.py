@@ -1,5 +1,5 @@
 from sistema.utils import getIntegerFromInterval
-from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById
+from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById, searchMovies
 
 
 class SistemaRecomendacion():
@@ -32,13 +32,26 @@ Digite una opción:
                         1, nUsuarios,
                         "El usuario que intenta buscar no existe"))
                 print("Las recomendaciones son las siguientes:\n")
-                print(recomendaciones)
                 numP = 1
-                for p in reversed(recomendaciones.pelicula):
-                    print("%d: %s" % (numP, searchMovieById(p)))
+                for i in reversed(recomendaciones.index):
+                    print("%d: %s (recomendacion %s)" % (
+                        numP, searchMovieById(
+                            recomendaciones.loc[i, "pelicula"]),
+                        recomendaciones.loc[i, "recomendacion"]))
                     numP += 1
             elif opcion == 2:
                 SistemaRecomendacion.agregarUsuario()
+
+    @staticmethod
+    def agregarUsuario():
+        nUsuarios = getNumUsers()
+        print("De las siguientes películas ingrese los rankigs de 10 películas:\nID:NOMBRE_PELÍCULA (GÉNERO)")
+        peliculas = searchMovies()
+        for i in peliculas.index:
+            print("%d: %s (%s)" %
+                  (peliculas.loc[i, "movieId"], peliculas.loc[i, "title"], , peliculas.loc[i, "genres"]))
+        peliculasRankeadas = input(
+            "El formato debe ser el siguiente: idPelicula,ranking,idPelicula2,ranking2...\nEl ranking debe ser del 1 al 5 [1-5]").strip()
 
     def __init__(self):
         SistemaRecomendacion.menu()

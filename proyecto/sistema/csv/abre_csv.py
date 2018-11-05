@@ -95,7 +95,7 @@ def obten_distancias(numUsuarios, vectorsDf, miVector):
 def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
 
     suma = np.zeros(numMovies, np.int64)
-    print(suma)
+    #print(suma)
     for i in range(0, numVectores):
         index = distancias.values[i, 0]
         index_int = int(index)
@@ -120,7 +120,7 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
     recDF = recDF.rename(index=str, columns={
                          0: "pelicula", 1: "recomendacion"})
 
-    print(recDF)
+    #print(recDF)
 
     recDf = recDF.sort_values(by=['recomendacion'])
 
@@ -137,7 +137,10 @@ def searchMovieById(movieId):
     moviesDf = pd.read_csv('sistema/csv/movies_reducido.csv')
 
     numMoviesDf = moviesDf[moviesDf['movieId'] == movieId]
-    return numMoviesDf.title
+    return numMoviesDf.title.item()
+
+def searchMovies():
+    return pd.read_csv('sistema/csv/movies_reducido.csv')
 
 
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
