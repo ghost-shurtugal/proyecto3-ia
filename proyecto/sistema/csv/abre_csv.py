@@ -133,6 +133,13 @@ def getNumUsers():
     return numUsuariosDf.values[0, 0]
 
 
+def searchMovieById(movieId):
+    moviesDf = pd.read_csv('sistema/csv/movies_reducido.csv')
+
+    numMoviesDf = moviesDf[moviesDf['movieId'] == movieId]
+    return numMoviesDf.title
+
+
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
     ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
 
@@ -184,6 +191,4 @@ def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
 
     recDf = obten_rec(numMovies, vectorsDf, distanciasDf,
                       CONST_NUM_VECTORES, miVector)
-    print("recomendaciones")
-    print(recDf)
     return recDf

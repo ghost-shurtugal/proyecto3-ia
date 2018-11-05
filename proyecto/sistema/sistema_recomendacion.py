@@ -1,5 +1,5 @@
 from sistema.utils import getIntegerFromInterval
-from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers
+from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById
 
 
 class SistemaRecomendacion():
@@ -31,7 +31,12 @@ Digite una opción:
                          nUsuarios),
                         1, nUsuarios,
                         "El usuario que intenta buscar no existe"))
+                print("Las recomendaciones son las siguientes:\n")
                 print(recomendaciones)
+                numP = 1
+                for p in reversed(recomendaciones.pelicula):
+                    print("%d: %s" % (numP, searchMovieById(p)))
+                    numP += 1
             elif opcion == 2:
                 SistemaRecomendacion.agregarUsuario()
 
