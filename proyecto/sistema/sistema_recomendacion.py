@@ -1,5 +1,5 @@
 from sistema.utils import getIntegerFromInterval
-from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById, searchMovies
+from sistema.csv.abre_csv import calcularRecomendaciones, getNumUsers, searchMovieById, searchMovies, saveInRankigs, getNumMovies
 
 
 class SistemaRecomendacion():
@@ -49,9 +49,38 @@ Digite una opción:
         peliculas = searchMovies()
         for i in peliculas.index:
             print("%d: %s (%s)" %
-                  (peliculas.loc[i, "movieId"], peliculas.loc[i, "title"], , peliculas.loc[i, "genres"]))
-        peliculasRankeadas = input(
-            "El formato debe ser el siguiente: idPelicula,ranking,idPelicula2,ranking2...\nEl ranking debe ser del 1 al 5 [1-5]").strip()
+                  (peliculas.loc[i, "movieId"], peliculas.loc[i, "title"], peliculas.loc[i, "genres"]))
+        while True:
+            peliculasRankeadas = input(
+                "El formato debe ser el siguiente: idPelicula,ranking,idPelicula2,ranking2...\nEl ranking debe ser del 1 al 5 [1-5]\n").strip()
+            peliculasRankeadas = SistemaRecomendacion.formateaArregloDePeliculasYRankings(
+                peliculasRankeadas)
+            if not peliculasRankeadas:
+                print("El formato es inválido")
+                continue
+            saveInRankigs(nUsuarios + 1, peliculasRankeadas)
+            break
+        print("Se han guardado su registro, el número de usuario que tiene es el número %d" % (
+            nUsuarios + 1))
+
+    @staticmethod
+    def formateaArregloDePeliculasYRankings(cadenaDeEntrada):
+        arregloDeEntrada = cadenaDeEntrada.split(",")
+        if len(arregloDeEntrada) != 20:
+            return None
+        try:
+            maxMovie = getNumMovies()
+            maxRanking = 5
+            result = []
+            for i in range(0, len(arregloDeEntrada), 2):
+                tmp = [int(arregloDeEntrada[i]),
+                       float(arregloDeEntrada[i + 1])]
+                if tmp[0] < 1 or tmp[1] < 1 or tmp[0] > maxMovie or tmp[1] > maxRanking:
+                    return None
+                result.append(tmp)
+            return result
+        except Exception:
+            return None
 
     def __init__(self):
         SistemaRecomendacion.menu()

@@ -95,7 +95,7 @@ def obten_distancias(numUsuarios, vectorsDf, miVector):
 def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
 
     suma = np.zeros(numMovies, np.int64)
-    #print(suma)
+    # print(suma)
     for i in range(0, numVectores):
         index = distancias.values[i, 0]
         index_int = int(index)
@@ -120,7 +120,7 @@ def obten_rec(numMovies, vectorsDf, distancias, numVectores, miVector):
     recDF = recDF.rename(index=str, columns={
                          0: "pelicula", 1: "recomendacion"})
 
-    #print(recDF)
+    # print(recDF)
 
     recDf = recDF.sort_values(by=['recomendacion'])
 
@@ -133,14 +133,32 @@ def getNumUsers():
     return numUsuariosDf.values[0, 0]
 
 
+def getNumMovies():
+    ratingsDf = pd.read_csv('sistema/csv/movies_reducido.csv')
+    numUsuariosDf = ratingsDf[ratingsDf['movieId']
+                              == ratingsDf['movieId'].max()]
+    return numUsuariosDf.values[0, 0]
+
+
 def searchMovieById(movieId):
     moviesDf = pd.read_csv('sistema/csv/movies_reducido.csv')
 
     numMoviesDf = moviesDf[moviesDf['movieId'] == movieId]
     return numMoviesDf.title.item()
 
+
 def searchMovies():
     return pd.read_csv('sistema/csv/movies_reducido.csv')
+
+
+def saveInRankigs(idUsuario, datos):
+    result = []
+    for d in datos:
+        result.append([idUsuario, d[0], d[1]])
+    ratingsDf = pd.read_csv('sistema/csv/ratings_reducido.csv')
+    ratingsDf.append(pd.DataFrame(result))
+    print(ratingsDf)
+    ratingsDf.to_csv(r'sistema/csv/ratings_reducido.csv', index=False)
 
 
 def calcularRecomendaciones(userId, CONST_NUM_VECTORES=4):
